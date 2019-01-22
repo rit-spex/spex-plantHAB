@@ -49,7 +49,7 @@ struct d_bmp *bmp_decode(const char *filename) {
 
 	fseek(bmpFile, 0, SEEK_END);/* goto beginning of file */
 	long jpglen = ftell(bmpFile);/* get length of the bitmap */
-	printf("Read %ld bytes from file\n", jpglen);
+	/* printf("Read %ld bytes from file\n", jpglen); */
 	rewind(bmpFile);
 	fileBuffer = (uint8_t *)malloc((jpglen + 1) * sizeof(uint8_t));/* allocate buffer to store file data */
 	fread(fileBuffer, jpglen, 1, bmpFile);/* read file data into buffer */
@@ -89,8 +89,10 @@ struct d_bmp *bmp_decode(const char *filename) {
 	temp += (fileBuffer[24] << 8);
 	temp += (fileBuffer[25]);
 	decoded->header.imgh = temp;*/
+
 	//memcpy(&(decoded->header.BM), fileBuffer, 0x46);
 	/* after the bitmap header is read, memcpy the rest of the bitmap from the file into the structure */
 	memcpy(&(decoded->header.dibHeadSize), &(fileBuffer[14]), /*0x46*/40);
+	//memcpy(&(decoded->header.BM), fileBuffer, 58);
 	return decoded;
 }

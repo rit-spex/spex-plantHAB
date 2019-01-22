@@ -19,8 +19,8 @@ int main(int argc, char *argv[]) {
 
 	char *getoptOptions = "f:";
 	struct option long_options[] = {
-			{"file", required_argument, 0, 'f'},
-			{0, 0, 0, 0}
+		{"file", required_argument, 0, 'f'},
+		{0, 0, 0, 0}
 	};
 	opterr = 1;
 
