@@ -11,6 +11,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*
+ * Destroys and frees memory used by the given bitmap
+ * Takes 1 parameter: a pointer to the bitmap to destroy
+ *
+ */
+void bmp_destroy(struct d_bmp *bitmap) {
+	free(bitmap->pxData);
+	free(bitmap);
+}
 
 /**
  * Decodes the bitmap given by the filename

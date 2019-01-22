@@ -51,4 +51,7 @@ struct d_bmp{
 	uint8_t *pxData;/* byte array storing the bitmap pixel data */
 };
 
+struct d_bmp *bmp_decode(const char *filename);
+void bmp_destroy(struct d_bmp *bitmap);
+
 #endif /* BMP_H_ */
