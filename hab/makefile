@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Wall -std=c99 -pedantic
-PROG=cbitmap
+PROG=cbmp
 PROGARGS=
 SOURCE=cbitmap/main.c cbitmap/bmp.c
 OBJ=$(patsubst %.c, %.o, $(SOURCE))
@@ -12,15 +12,15 @@ all: $(PROG)
 
 .c.o:
 	@echo "compile $<"
-        $(CC) $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) -c $<
 
-$(PROG): $(SOURCE)
+$(PROG): $(OBJ)
 	@echo "linking $(PROG)"
 	$(CC) $(CFLAGS) -O0 $(SOURCE) -o $(PROG)
 
 clean:
 	-rm -f $(PROG)
-	
+	-rm -rf *.o
 
 test: $(PROG)
 	echo "./$(PROG) $(PROGARGS)
