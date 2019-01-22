@@ -1,13 +1,13 @@
 CC=gcc
 CFLAGS=-Wall -std=c99 -pedantic
 PROG=cbmp
-PROGARGS=
+PROGARGS=-f $(TESTPICTURE)
 SOURCE=cbitmap/main.c cbitmap/bmp.c
 OBJ=$(patsubst %.c, %.o, $(SOURCE))
 OUTPUTFILE=$(PROG).log
 
 TESTPICTURE=testbmp.bmp
-CAPTUREARGS=-e bmp  -w 1280 -h 720 -o $(TESTPICTURE)
+CAPTUREARGS=-t 1 -e bmp -w 1280 -h 720 -o $(TESTPICTURE)
 
 .SILENT:
 .PHONY: all test clean help
@@ -26,10 +26,12 @@ clean:
 	-rm -f $(PROG)
 	-rm -f cbitmap/*.o
 	-rm -f $(OUTPUTFILE)
+	-rm -f $(TESTPICTURE)
 
 test: $(PROG)
-	echo "sudo raspistill $(CAPTUREARGS) &> $(OUTPUTFILE)"
-	sudo raspistill $(CAPTUREARGS) &> $(OUTPUTFILE)
+	echo "raspistill $(CAPTUREARGS) &> $(OUTPUTFILE)"
+	raspistill $(CAPTUREARGS) &> $(OUTPUTFILE)
+	sleep 5
 	echo "./$(PROG) $(PROGARGS) &>> $(OUTPUTFILE)"
 	./$(PROG) $(PROGARGS) &>> $(OUTPUTFILE)
 	cat $(OUTPUTFILE)
