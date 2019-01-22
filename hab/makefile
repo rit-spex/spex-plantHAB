@@ -16,7 +16,7 @@ all: $(PROG)
 
 .c.o:
 	@echo "compile $<"
-	$(CC) $(CFLAGS) -c cbitmap/$<
+	$(CC) $(CFLAGS) -c $< -o $(patsubst %.c, %.o, $<)
 
 $(PROG): $(OBJ)
 	@echo "linking $(PROG)"
@@ -28,8 +28,8 @@ clean:
 	-rm -f $(OUTPUTFILE)
 
 test: $(PROG)
-	echo "raspistill $(CAPTUREARGS) &> $(OUTPUTFILE)"
-	raspistill $(CAPTUREARGS) &> $(OUTPUTFILE)
+	echo "sudo raspistill $(CAPTUREARGS) &> $(OUTPUTFILE)"
+	sudo raspistill $(CAPTUREARGS) &> $(OUTPUTFILE)
 	echo "./$(PROG) $(PROGARGS) &>> $(OUTPUTFILE)"
 	./$(PROG) $(PROGARGS) &>> $(OUTPUTFILE)
 	cat $(OUTPUTFILE)
