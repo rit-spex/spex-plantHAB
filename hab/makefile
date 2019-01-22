@@ -16,7 +16,7 @@ all: $(PROG)
 
 .c.o:
 	@echo "compile $<"
-	$(CC) $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) -c cbitmap/$<
 
 $(PROG): $(OBJ)
 	@echo "linking $(PROG)"
@@ -24,7 +24,7 @@ $(PROG): $(OBJ)
 
 clean:
 	-rm -f $(PROG)
-	-rm -f *.o
+	-rm -f cbitmap/*.o
 	-rm -f $(OUTPUTFILE)
 
 test: $(PROG)
