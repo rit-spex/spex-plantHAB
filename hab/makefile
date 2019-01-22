@@ -6,6 +6,9 @@ SOURCE=cbitmap/main.c cbitmap/bmp.c
 OBJ=$(patsubst %.c, %.o, $(SOURCE))
 OUTPUTFILE=$(PROG).log
 
+TESTPICTURE=testbmp.bmp
+CAPTUREARGS=-e bmp  -w 1280 -h 720 -o $(TESTPICTURE)
+
 .SILENT:
 .PHONY: all test clean help
 
@@ -25,6 +28,8 @@ clean:
 	-rm -f $(OUTPUTFILE)
 
 test: $(PROG)
+	echo "raspistill $(CAPTUREARGS) &> $(OUTPUTFILE)"
+	raspistill $(CAPTUREARGS) &> $(OUTPUTFILE)
 	echo "./$(PROG) $(PROGARGS) &>> $(OUTPUTFILE)"
 	./$(PROG) $(PROGARGS) &>> $(OUTPUTFILE)
 	cat $(OUTPUTFILE)
