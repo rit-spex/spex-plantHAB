@@ -4,6 +4,7 @@ PROG=cbmp
 PROGARGS=
 SOURCE=cbitmap/main.c cbitmap/bmp.c
 OBJ=$(patsubst %.c, %.o, $(SOURCE))
+OUTPUTFILE=$(PROG).log
 
 .SILENT:
 .PHONY: all test clean help
@@ -16,15 +17,17 @@ all: $(PROG)
 
 $(PROG): $(OBJ)
 	@echo "linking $(PROG)"
-	$(CC) $(CFLAGS) -O0 $(SOURCE) -o $(PROG)
+	$(CC) $(CFLAGS) -O0 $(OBJ) -o $(PROG)
 
 clean:
 	-rm -f $(PROG)
-	-rm -rf *.o
+	-rm -f *.o
+	-rm -f $(OUTPUTFILE)
 
 test: $(PROG)
-	echo "./$(PROG) $(PROGARGS)
-	./$(PROG) $(PROGARGS)
+	echo "./$(PROG) $(PROGARGS) &>> $(OUTPUTFILE)"
+	./$(PROG) $(PROGARGS) &>> $(OUTPUTFILE)
+	cat $(OUTPUTFILE)
 	
 help:
 	@echo "make options are all, test, clean, and help"
