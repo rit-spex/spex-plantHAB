@@ -1,0 +1,4 @@
+hab/cbitmap/*.o
+hab/testbmp.bmp
+hab/cbmp
+hab/cbmp.log
