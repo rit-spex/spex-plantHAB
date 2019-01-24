@@ -13,7 +13,7 @@
 
 #include "bmp.h"
 
-#define BMP_IDENTIFIER 0x4d4d
+#define BMP_IDENTIFIER 0x424d
 
 static const char *lgcStr[] = {"\033[22;31mFALSE\033[0m", "\033[22;32mTRUE\033[0m"};
 
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	if(checkBitmapIntegrity) {
-		fprintf(stdout, "%x == BMP_ID == BM == %x:\t%s\n", BMP_IDENTIFIER, myBmp->header.BM, lgcStr[myBmp->header.BM == BMP_IDENTIFIER]);
+		fprintf(stdout, "0x%x == BMP_ID == BM == 0x%x:\t\t%s\n", BMP_IDENTIFIER, myBmp->header.BM, lgcStr[myBmp->header.BM == BMP_IDENTIFIER]);
 	}
 	if(expectedDIBHeaderSize) {
 		fprintf(stdout, "%u == dibsize  == dibHeadSize == %u:\t%s\n", expectedDIBHeaderSize, myBmp->header.dibHeadSize, lgcStr[myBmp->header.dibHeadSize == expectedDIBHeaderSize]);
