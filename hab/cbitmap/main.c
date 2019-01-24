@@ -53,20 +53,20 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	}
 	if(expectedWidth != expectedHeight) {
-		if(!(expectedWidth & expectedHeight)) {/* if either one is still 0 (they can't both be because they are not equal) */
+		if((expectedWidth == 0 || expectedHeight == 0)) {/* if either one is still 0 (they can't both be because they are not equal) */
 			fprintf(stderr, "Either both or neither x (expw) and y (exph) must be specified\n");
 			exit(1);
 		}
 	}
-
+	
 	myBmp = bmp_decode(filename);
 
-	if(expectedWidth & expectedHeight) {/* both are non-zero */
-		char *lgcStr[] = {ANSI_COLOR_RED"FALSE"ANSI_COLOR_RESET, ANSI_COLOR_GREEN"TRUE"ANSI_COLOR_RESET};
+	if(expectedWidth && expectedHeight) {/* both are non-zero */
+		char *lgcStr[] = {"\033[22;31mFALSE\033[0m", "\033[22;32mTRUE\033[0m"};
 		fprintf(stdout, "%d == width == expw == %d:\t%s\n", expectedWidth, myBmp->header.imgw, lgcStr[myBmp->header.imgw == expectedWidth]);
 		fprintf(stdout, "%d == height == exph == %d:\t%s\n", expectedHeight, myBmp->header.imgh, lgcStr[myBmp->header.imgh == expectedHeight]);
 	}
-
+	
 	bmp_destroy(myBmp);
 
 	return 0;
