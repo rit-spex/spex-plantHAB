@@ -6,8 +6,11 @@ SOURCE=cbitmap/main.c cbitmap/bmp.c
 OBJ=$(patsubst %.c, %.o, $(SOURCE))
 OUTPUTFILE=$(PROG).log
 
+TESTIMGW=1280
+TESTIMGH=720
+PROGSIZETESTARGS=-expw $(TESTIMGW) -exph $(TESTIMGH) 
 TESTPICTURE=testbmp.bmp
-CAPTUREARGS=-t 1 -e bmp -w 1280 -h 720 -o $(TESTPICTURE)
+CAPTUREARGS=-t 1 -e bmp -w $(TESTIMGW) -h $(TESTIMGH) -o $(TESTPICTURE)
 
 .SILENT:
 .PHONY: all test clean help
@@ -33,7 +36,7 @@ test: $(PROG)
 	raspistill $(CAPTUREARGS) &> $(OUTPUTFILE)
 	sleep 5
 	echo "./$(PROG) $(PROGARGS) &>> $(OUTPUTFILE)"
-	./$(PROG) $(PROGARGS) &>> $(OUTPUTFILE)
+	./$(PROG) $(PROGSIZETESTARGS) $(PROGARGS) &>> $(OUTPUTFILE)
 	cat $(OUTPUTFILE)
 	
 help:
