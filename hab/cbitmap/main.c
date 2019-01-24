@@ -5,16 +5,16 @@
  *      Author: Bernard
  */
 
-#define ANSI_COLOR_GREEN   "\x1b[32m"
-#define ANSI_COLOR_RED     "\x1b[31m"
-#define ANSI_COLOR_RESET   "\x1b[0m"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "bmp.h"
+
+
+static const char *lgcStr[] = {"\033[22;31mFALSE\033[0m", "\033[22;32mTRUE\033[0m"};
 
 int main(int argc, char *argv[]) {
 	struct d_bmp *myBmp = NULL;
@@ -22,12 +22,14 @@ int main(int argc, char *argv[]) {
 	int rc;
 	int option_index = 0;
 	int32_t expectedWidth = 0, expectedHeight = 0;
+	uint16_t expectedPxSize = 0;
 
-	char *getoptOptions = "f:x:y:";
+	char *getoptOptions = "f:x:y:z:";
 	struct option long_options[] = {
 		{"file", required_argument, 0, 'f'},
 		{"expw", required_argument, 0, 'x'},
 		{"exph", required_argument, 0, 'y'},
+		{"pxsize", required_argument, 0, 'z'},
 		{0, 0, 0, 0}
 	};
 	opterr = 1;
@@ -38,10 +40,13 @@ int main(int argc, char *argv[]) {
 				filename = optarg;
 				break;
 			case 'x':
-				expectedWidth = (int)strtol(optarg, &optarg, 10);
+				expectedWidth = (int32_t)strtol(optarg, &optarg, 10);
 				break;
 			case 'y':
-				expectedHeight = (int)strtol(optarg, &optarg, 10);
+				expectedHeight = (int32_t)strtol(optarg, &optarg, 10);
+				break;
+			case 'z':
+				expectedPxSize = (uint16_t)strtol(optarg, &optarg, 10);
 				break;
 			default:
 				printf ("Internal error: undefined option %0xX\n", rc);
@@ -62,9 +67,11 @@ int main(int argc, char *argv[]) {
 	myBmp = bmp_decode(filename);
 
 	if(expectedWidth && expectedHeight) {/* both are non-zero */
-		char *lgcStr[] = {"\033[22;31mFALSE\033[0m", "\033[22;32mTRUE\033[0m"};
-		fprintf(stdout, "%d == width == expw == %d:\t%s\n", expectedWidth, myBmp->header.imgw, lgcStr[myBmp->header.imgw == expectedWidth]);
-		fprintf(stdout, "%d == height == exph == %d:\t%s\n", expectedHeight, myBmp->header.imgh, lgcStr[myBmp->header.imgh == expectedHeight]);
+		fprintf(stdout, "%d == width == expw == %d:\t\t%s\n", expectedWidth, myBmp->header.imgw, lgcStr[myBmp->header.imgw == expectedWidth]);
+		fprintf(stdout, "%d == height == exph == %d:\t\t%s\n", expectedHeight, myBmp->header.imgh, lgcStr[myBmp->header.imgh == expectedHeight]);
+	}
+	if(expectedPxSize) {
+		fprintf(stdout, "%d == pxSize_bits == pxsize == %d:\t%s\n", expectedPxSize, myBmp->header.pxSize_bits, lgcStr[myBmp->header.pxSize_bits == expectedPxSize]);
 	}
 	
 	bmp_destroy(myBmp);
