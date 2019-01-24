@@ -13,6 +13,7 @@
 
 #include "bmp.h"
 
+#define BMP_IDENTIFIER 0x4d4d
 
 static const char *lgcStr[] = {"\033[22;31mFALSE\033[0m", "\033[22;32mTRUE\033[0m"};
 
@@ -21,17 +22,19 @@ int main(int argc, char *argv[]) {
 	char *filename = NULL;
 	int rc;
 	int option_index = 0;
+	uint8_t checkBitmapIntegrity = 0;
 	uint32_t expectedDIBHeaderSize = 0;
 	int32_t expectedWidth = 0, expectedHeight = 0;
 	uint16_t expectedPxSize = 0;
 
-	char *getoptOptions = "f:x:y:z:b:";
+	char *getoptOptions = "f:x:y:z:b:n";
 	struct option long_options[] = {
 		{"file", required_argument, 0, 'f'},
 		{"expw", required_argument, 0, 'x'},
 		{"exph", required_argument, 0, 'y'},
 		{"pxsize", required_argument, 0, 'z'},
 		{"dibsize", required_argument, 0, 'b'},
+		{"chbmpint", no_argument, 0, 'n'},
 		{0, 0, 0, 0}
 	};
 	opterr = 1;
@@ -53,6 +56,9 @@ int main(int argc, char *argv[]) {
 			case 'b':
 				expectedDIBHeaderSize = (uint32_t)strtol(optarg, &optarg, 10);
 				break;
+			case 'n':
+				checkBitmapIntegrity = 1;
+				break;
 			default:
 				printf ("Internal error: undefined option %0xX\n", rc);
 				exit(1);
@@ -70,8 +76,15 @@ int main(int argc, char *argv[]) {
 	}
 	
 	myBmp = bmp_decode(filename);
+	
+	if((void *)0 == myBmp) {
+		fprintf(stderr, "Could not open file for reading. Terminating...\n");
+		exit(2);
+	}
 
-
+	if(checkBitmapIntegrity) {
+		fprintf(stdout, "%x == BMP_ID == BM == %x:\t%s\n", BMP_IDENTIFIER, myBmp->header.BM, lgcStr[myBmp->header.BM == BMP_IDENTIFIER]);
+	}
 	if(expectedDIBHeaderSize) {
 		fprintf(stdout, "%u == dibsize  == dibHeadSize == %u:\t%s\n", expectedDIBHeaderSize, myBmp->header.dibHeadSize, lgcStr[myBmp->header.dibHeadSize == expectedDIBHeaderSize]);
 	}
