@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
 
 
 	if(expectedDIBHeaderSize) {
-		fprintf(stdout, "%u == dibsize  == dibHeadSize == %u:\t\t%s\n", expectedDIBHeaderSize, myBmp->header.dibHeadSize, lgcStr[myBmp->header.dibHeadSize == expectedDIBHeaderSize]);
+		fprintf(stdout, "%u == dibsize  == dibHeadSize == %u:\t%s\n", expectedDIBHeaderSize, myBmp->header.dibHeadSize, lgcStr[myBmp->header.dibHeadSize == expectedDIBHeaderSize]);
 	}
 	if(expectedWidth && expectedHeight) {/* both are non-zero */
 		fprintf(stdout, "%d == width == expw == %d:\t\t%s\n", expectedWidth, myBmp->header.imgw, lgcStr[myBmp->header.imgw == expectedWidth]);
