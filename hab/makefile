@@ -41,6 +41,12 @@ test: $(PROG)
 	./$(PROG) $(PROGSIZETESTARGS) $(PROGARGS) &>>$(OUTPUTFILE)
 	cat $(OUTPUTFILE)
 	sleep 0.5
+
+testfile: $(PROG)
+	echo "./$(PROG) $(PROGSIZETESTARGS) $(PROGARGS) &>> $(OUTPUTFILE)"
+	./$(PROG) $(PROGSIZETESTARGS) $(PROGARGS) &>>$(OUTPUTFILE)
+	cat $(OUTPUTFILE)
+	sleep 0.5
 	
 help:
 	@echo "make options are all, test, clean, and help"
