@@ -32,6 +32,7 @@ struct d_bmp *bmp_decode(const char *filename) {
 	struct d_bmp *decoded = NULL;
 	uint8_t *fileBuffer = NULL;
 	uint32_t temp = 0;
+	uint32_t pxDataLen = 0;
 
 	bmpFile = fopen(filename, "rb");/* open bitmap file for reading */
 	if(NULL == bmpFile) {/* if failed to open, print error and return null */
@@ -94,5 +95,29 @@ struct d_bmp *bmp_decode(const char *filename) {
 	/* after the bitmap header is read, memcpy the rest of the bitmap from the file into the structure */
 	memcpy(&(decoded->header.dibHeadSize), &(fileBuffer[14]), /*0x46*/40);
 	//memcpy(&(decoded->header.BM), fileBuffer, 58);
+
+	memcpy(&(decoded->header.imgStart), &(fileBuffer[10]), 4);
+
+	/*  Compute the size of the byte buffer needed to hold the pixel data
+	    This is a bit easier said than done because pixel rows are always padded to be an integer multiple of 32 bits.
+
+		Take the product of the height and width of the image to find the number of pixels in the image and multiply by the size of a pixel in bytes.
+		This result gives us the size needed to hold just the image pixels. We need to add space for the padding too.
+		To calculate the number of bytes needed for padding, divide the size of pixels in bits to get the size of pixels in bytes.
+		Take the size of pixels in bytes and multiply by the width in pixels of the image to get the length of one pixel row in bytes.
+		Take the remainder of the row size in bytes when dividing by 4. This tells us the number of extra bytes over the last multiple of 32 bits we have in the row.
+		Invert that scale over the range 0-4 by subtracting the result from 4 bytes (32 bits).
+		This result will either be 4, 3, 2, or 1. If the result if 3, 2, or 1, that is the number of bytes needed for padding the row. If the result if 4, 0 bytes are needed.
+		We therefore take the remainder when dividing this  result by 4.
+		If the result was 4, this evaluates to 0 bytes of padding needed. If the result was 3, 2, or 1, the modulo is an identity operation. */
+	pxDataLen = decoded->header.imgh * decoded->header.imgw * (decoded->header.pxSize_bits / 8) + ((4 - (((decoded->header.pxSize_bits / 8) * decoded->header.imgw) % 4)) % 4);
+
+	decoded->pxData = (uint8_t *)malloc(pxDataLen);
+	if(NULL == decoded->pxData) {
+		fprintf(stderr, "%s %d, Failed to allocate memory for pixel array\n", __FILE__, __LINE__);
+	}
+	
+	memcpy(decoded->pxData, &(fileBuffer[decoded->header.imgStart]), pxDataLen);
+
 	return decoded;
 }
