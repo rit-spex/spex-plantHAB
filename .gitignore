@@ -2,3 +2,7 @@ hab/cbitmap/*.o
 hab/testbmp.bmp
 hab/cbmp
 hab/cbmp.log
+habcv-test-build.log
+habcv-test
+habcv-test.log
+output
