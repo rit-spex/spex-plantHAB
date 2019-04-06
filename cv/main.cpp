@@ -95,8 +95,11 @@ int main(int argc, char **argv) {
     Mat imageBGR = imread(filename, CV_LOAD_IMAGE_COLOR);
 #else
     /* This gets built on the HAB. To test from the HAB we want to capture an image and then process it */
-    VideoCapture cap;
-    if(!cap.open(0)) {
+    VideoCapture cap(0);
+    cap.set(CV_CAP_PROP_FRAME_HEIGHT, 1080);
+    cap.set(CV_CAP_PROP_FRAME_WIDTH, 1920);
+    usleep(5000000);
+    if(!cap.isOpened()) {
         fprintf(stderr, "Error opening camera\n");
         exit(-1);
     }
