@@ -35,14 +35,14 @@ char sofnb[MAX_PATH_LEN_UNIX];
 int main(int argc, char **argv) {
     /* length of output path. this is used to determine where to start writing the output filename into the buffer. */
     size_t outputPathLen = 0;
+    /* An alternative directory for storing output can optionally be specified (see option parsing) */
+    char *outputPath = "./output";
 #ifdef NPI
     /* This never gets built on the HAB. */
     /* ifdef NPI blocks compile on a computer being used for testing specific data samples. */
     
     /* Data is provided to the program through the '-f' flag specifying an image filename. */
     char *filename = NULL;
-    /* An alternative directory for storing output can optionally be specified (see option parsing) */
-    char *outputPath = "./output";
     int rc;
     
     /* Image formats required signed dimensions to determine direction of image rendering */
