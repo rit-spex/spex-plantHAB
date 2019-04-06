@@ -92,9 +92,6 @@ int main(int argc, char **argv) {
             exit(1);
         }
     }
-    memset(&sofnb[0], 0, MAX_PATH_LEN_UNIX);/* Clear sofnb */
-    outputPathLen = strlen(outputPath);/* Calculate length of path to determine insertion index */
-    memcpy(&sofnb[0], outputPath, outputPathLen);/* Copy the output path into the output filename buffer */
     Mat imageBGR = imread(filename, CV_LOAD_IMAGE_COLOR);
 #else
     /* This gets built on the HAB. To test from the HAB we want to capture an image and then process it */
@@ -110,6 +107,9 @@ int main(int argc, char **argv) {
         exit(-2);
     }
 #endif
+    memset(&sofnb[0], 0, MAX_PATH_LEN_UNIX);/* Clear sofnb */
+    outputPathLen = strlen(outputPath);/* Calculate length of path to determine insertion index */
+    memcpy(&sofnb[0], outputPath, outputPathLen);/* Copy the output path into the output filename buffer */
     vector<Mat> chBGR;
     split(imageBGR, chBGR);
     Mat nm = chBGR[2] - chBGR[0];
