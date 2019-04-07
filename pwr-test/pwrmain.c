@@ -55,9 +55,11 @@ int main(int argc, char **argv) {
             start = now;
             snprintf(&sofnb[0], MAX_PATH_LEN_UNIX, "raspistill -n -e png -w 1920 -h 1080 -o %ld", now);
             system(&sofnb[0]);
+            usleep(6000000);
             memset(&sofnb[0], 0, MAX_PATH_LEN_UNIX);
             snprintf(&sofnb[0], MAX_PATH_LEN_UNIX, "output/mscap_%ld.png", now);
-            imwrite(&sofnb[0], imageBGR);
+            imageBGR = imread(&sofnb[0]);
+            
             memset(&sofnb[0], 0, MAX_PATH_LEN_UNIX);
             
             split(imageBGR, chBGR);
