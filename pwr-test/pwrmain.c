@@ -32,7 +32,7 @@ using namespace cv;
 /* We can safely do this because imwrite will block until the writing is completed. */
 /* For now files are written in order from shortest name to longest. */
 /* If files must be written in a specific order which violates this rule, the buffer should be zeroed before being rewritten by a shorter name. */
-char sofnb[MAX_PATH_LEN_UNIX] = "output";
+char sofnb[MAX_PATH_LEN_UNIX];
 
 int main(int argc, char **argv) {
     
@@ -53,12 +53,12 @@ int main(int argc, char **argv) {
             
             Mat imageBGR;
             start = now;
-            snprintf(&sofnb[0], MAX_PATH_LEN_UNIX, "raspistill -n -e png -w 1920 -h 1080 -o %ld", now);
+            snprintf(&sofnb[0], MAX_PATH_LEN_UNIX, "raspistill -n -e png -w 1920 -h 1080 -o output/mscap_%lu.png", now);
             system(&sofnb[0]);
             usleep(6000000);
             memset(&sofnb[0], 0, MAX_PATH_LEN_UNIX);
-            snprintf(&sofnb[0], MAX_PATH_LEN_UNIX, "output/mscap_%ld.png", now);
-            imageBGR = imread(&sofnb[0]);
+            snprintf(&sofnb[0], MAX_PATH_LEN_UNIX, "output/mscap_%lu.png", now);
+            imageBGR = imread(&sofnb[0], CV_LOAD_IMAGE_COLOR);
             
             memset(&sofnb[0], 0, MAX_PATH_LEN_UNIX);
             
@@ -72,16 +72,16 @@ int main(int argc, char **argv) {
             applyColorMap(ndvi, cm2_ndvi, COLORMAP_HSV);
             cvtColor(cm2_ndvi, cm2_ndvi_gray, CV_BGR2GRAY);
             
-            snprintf(&sofnb[0], MAX_PATH_LEN_UNIX, "output/ndvi-calc3_1_%ld.png", now);
+            snprintf(&sofnb[0], MAX_PATH_LEN_UNIX, "output/ndvi-calc3_1_%lu.png", now);
             imwrite(&sofnb[0], cm2_ndvi);
             memset(&sofnb[0], 0, MAX_PATH_LEN_UNIX);
-            snprintf(&sofnb[0], MAX_PATH_LEN_UNIX, "output/ndvi-calc3_2_%ld.png", now);
+            snprintf(&sofnb[0], MAX_PATH_LEN_UNIX, "output/ndvi-calc3_2_%lu.png", now);
             imwrite(&sofnb[0], cm2_ndvi_gray);
             memset(&sofnb[0], 0, MAX_PATH_LEN_UNIX);
             
             gettimeofday(&tp, NULL);
             now = tp.tv_sec * 1000 + tp.tv_usec / 1000;
-            fprintf(stdout, "Processing took %ld ms\n", now - start);
+            fprintf(stdout, "Processing took %lu ms\n", now - start);
             last = now;
         }
         else {
