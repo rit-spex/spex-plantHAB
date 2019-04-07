@@ -49,6 +49,7 @@ $(PWRPROG): $(PWRSOURCE)
 	$(CPPC) $(CPPFLAGS) $(PWRSOURCE) -o $(PWRPROG) $(LFLAGS) >$(BUILDLOG) 2>&1
 	
 pwrtestb: $(PWRPROG)
+	-mkdir -p $(OUTPUTPATH)
 	./$(PWRPROG) >$(OUTPUTFILE) 2>&1
 
 help:

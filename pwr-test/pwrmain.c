@@ -35,16 +35,6 @@ using namespace cv;
 char sofnb[MAX_PATH_LEN_UNIX] = "output";
 
 int main(int argc, char **argv) {
-
-    vector<Mat> chBGR;
-    Mat nm;
-    Mat dn;
-    
-    Mat ndvi;
-    Mat cm2_ndvi;
-    Mat cm2_ndvi_gray;
-    
-    Mat imageBGR;
     
     unsigned long now, last = 0, start = 0;
     struct timeval tp;
@@ -52,6 +42,15 @@ int main(int argc, char **argv) {
         gettimeofday(&tp, NULL);
         now = tp.tv_sec * 1000 + tp.tv_usec / 1000;
         if(now - last >= 30000) {
+            vector<Mat> chBGR;
+            Mat nm;
+            Mat dn;
+            
+            Mat ndvi;
+            Mat cm2_ndvi;
+            Mat cm2_ndvi_gray;
+            
+            Mat imageBGR;
             start = now;
             snprintf(&sofnb[0], MAX_PATH_LEN_UNIX, "raspistill -n -e png -w 1920 -h 1080 -o %ld", now);
             system(&sofnb[0]);
@@ -70,11 +69,11 @@ int main(int argc, char **argv) {
             cvtColor(cm2_ndvi, cm2_ndvi_gray, CV_BGR2GRAY);
             
             snprintf(&sofnb[0], MAX_PATH_LEN_UNIX, "output/ndvi-calc3_1_%ld.png", now);
-            memset(&sofnb[0], 0, MAX_PATH_LEN_UNIX);
             imwrite(&sofnb[0], cm2_ndvi);
-            snprintf(&sofnb[0], MAX_PATH_LEN_UNIX, "output/ndvi-calc3_2_%ld.png", now);
             memset(&sofnb[0], 0, MAX_PATH_LEN_UNIX);
+            snprintf(&sofnb[0], MAX_PATH_LEN_UNIX, "output/ndvi-calc3_2_%ld.png", now);
             imwrite(&sofnb[0], cm2_ndvi_gray);
+            memset(&sofnb[0], 0, MAX_PATH_LEN_UNIX);
             
             gettimeofday(&tp, NULL);
             now = tp.tv_sec * 1000 + tp.tv_usec / 1000;
